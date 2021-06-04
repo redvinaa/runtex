@@ -1,0 +1,63 @@
+\graphicspath{{./figures/}}
+\pagestyle{fancy}
+\fancyhead[L]{TITLE}
+\fancyhead[R]{Réda Vince}
+\fancyfoot[C]{\thepage}
+% \fancyfoot[R]{Z697LX}
+\linespread{1.5}
+\floatsetup[table]{capposition=top}
+
+\setlength\parindent{1cm}
+\setlength\parskip{3mm}
+
+% \let\stdsection\section
+% \renewcommand\section{\newpage\stdsection}
+
+\captionsetup[table]{font={stretch=1.2}}
+\captionsetup[figure]{font={stretch=1.2}}
+
+\lstset{showstringspaces=false}
+\lstset{
+	inputencoding=utf8/latin1,
+	lineskip=1mm,
+	language=Python,
+	numbers=left,
+	tabsize=2,
+	numbersep=5mm,
+	framexleftmargin=10mm,
+	frame=single,
+	framerule=0.3mm,
+	basicstyle=\footnotesize\ttfamily,
+	keywordstyle=\color{blue}\ttfamily\bfseries,
+	stringstyle=\color{red}\ttfamily,
+	commentstyle=\color{magenta}\ttfamily,
+	morecomment=[l][\color{magenta}]{\#}
+}
+
+\PassOptionsToPackage{usenames, dvipsnames}{xcolor}
+\hypersetup{
+  colorlinks   = true, %Colours links instead of ugly boxes
+  urlcolor     = blue, %Colour for external hyperlinks
+  linkcolor    = blue, %Colour of internal links
+  citecolor   = red %Colour of citations
+}
+
+\makeatletter
+\def\incfig{\@ifnextchar[{\@with}{\@without}}
+\def\@with[#1]#2{\def\svgwidth{#1} \import{./figures/}{#2.pdf_tex}}
+\def\@without#1{\def\svgwidth{\columnwidth} \import{./figures/}{#1.pdf_tex}}
+\makeatother
+
+\newcommand\fn[1]{\mathrm{#1}}
+\renewcommand\v[1]{\boldsymbol{\mathrm{#1}}}
+\newcommand\dB{\operatorname{dB}}
+\newcommand\at[1]{\bigg\rvert_{#1}}
+\newcommand\mat[1]{\begin{bmatrix}#1\end{bmatrix}} 
+\newcommand\brc[1]{\left(#1\right)}
+\newcommand\R{\textsuperscript{\textregistered}}
+\newcommand\reals{\mathbb{R}}
+\newcommand\integers{\mathbb{Z}}
+\newcommand\tick{$\checkmark$}
+
+\DeclarePairedDelimiter\abs{\lvert}{\rvert}
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
