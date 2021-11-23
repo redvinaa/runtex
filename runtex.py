@@ -1,6 +1,8 @@
 #! /usr/bin/python3.8
+# PYTHON_ARGCOMPLETE_OK
 
-import argparse
+import argparse, argcomplete
+from glob import glob
 import yaml
 import os
 
@@ -17,15 +19,18 @@ parse_init.add_argument('template', help='Choose a template')
 
 parse_list = subparsers.add_parser('list', help='List the currently available templates')
 
-parse_save = subparsers.add_parser('save')
+parse_save = subparsers.add_parser('save', help='Save current project as a template')
 parse_save.add_argument('template', help='Name of the new template')
 parse_save.add_argument('-u', '--update', action='store_true', help='Update existing')
 
-parse_run  = subparsers.add_parser('run')
+parse_run  = subparsers.add_parser('run', help='Compile current project')
+parse_run.add_argument('--update-figures', action='store_true', help='Use inkscape to convert'+\
+    'svg figures to pdf in the figures directory')
 
 parse_delete = subparsers.add_parser('delete', help='Delete existing template')
 parse_delete.add_argument('template', help='Name of the template to delete')
 
+argcomplete.autocomplete(parser)
 args = parser.parse_args()
 action = args.action
 
@@ -78,7 +83,7 @@ if args.action == 'run': # {{{
 		quit()
 
 	with open('.runtex.yaml') as f:
-		conf = yaml.load(f)
+		conf = yaml.load(f, Loader=yaml.FullLoader)
 
 	if not 'build' in files:
 		os.system('mkdir build')
@@ -87,12 +92,12 @@ if args.action == 'run': # {{{
 		os.system(f'mv build/{f} . 2>/dev/null')
 
 
-	# TODO
-	#  if 'figures' in files:
-	#      figs_dir = os.path.join(ws_dir, 'figures')
-	#      figs_files = os.listdir(figs_dir)
-	#      for fig in figs_files:
-	#          if 'svg' in fig:
+	if 'figures' in files and args.update_figures:
+		figs = os.path.join(ws_dir, 'figures', '*.svg')
+		print(f'figs = {figs}')
+		for fig in glob(figs):
+			print(f'fig = {fig}')
+			os.system(f'inkscape {fig} --export-area-drawing --batch-process --export-type=pdf --export-filename={fig[:-3]}pdf')
 
 	os.system('pdflatex -halt-on-error main.tex')
 	if conf['bibtex']:
@@ -102,7 +107,7 @@ if args.action == 'run': # {{{
 		print('pythontex')
 
 
-	os.system(f'cp main.pdf {conf["document_name"]}.pdf > /dev/null')
+	os.system(f'cp main.pdf {conf["document_name"]}.pdf 2> /dev/null')
 
 	for f in conf['hide_misc']:
 		os.system(f'mv {f} build/ 2>/dev/null')
